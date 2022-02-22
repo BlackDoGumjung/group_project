@@ -15,60 +15,256 @@ $(document).ready(function(){
 	}
 
 
-// 섹션.비쥬얼 슬라이드(자바스크립트)
+// 섹션.비쥬얼 슬라이드(자바스크립트, 자동슬라이드, 도트 누르면 그 페이지에서 멈추다가 다시 자동 작동되게하기)
 
-	function slide01(){
-		let slides = document.querySelector('.slides_wrap');
-		let page = document.querySelector('.pagination');
-		let item = slides.getElementsByClassName('slide');
-		let dot = page.getElementsByClassName('dots')
+	// function slide01(){
+	// 	const slides = document.querySelector('.slides_wrap');
+	// 	const page = document.querySelector('.pagination');
+	// 	const item = slides.getElementsByClassName('slide');
+	// 	const dot = page.getElementsByClassName('dots');
 
-		let firstEle = item[0];
-		let firstPagin = dot[0];
+	// 	const firstEle = item[0]; // 첫번째아이템
+	// 	const firstPagin = dot[0]; // 첫번째도트
 
-		firstEle.classList.add('cur');
-		firstPagin.classList.add('active');
+    //     firstEle.classList.add('cur');
+	// 	firstPagin.classList.add('active');
 
-		let auto_slide = setInterval(slider_auto, 3000);
+	// 	const auto_slide = setInterval(slider_auto, 3000);
 
-		function slider_auto(){
-			let curItem = document.querySelector('.cur');
-			let curDot = document.querySelector('.active');
+	// 	function slider_auto(Isthat){
 
-			curItem.classList.remove('cur');
-			curDot.classList.remove('active');
-			
-			if(!curItem.nextElementSibling){
-				item[0].classList.add('cur');
-				dot[0].classList.add('active');
-			} else{
-				curItem.nextElementSibling.classList.add('cur');
-				curDot.nextElementSibling.classList.add('active');
-			}
-		}
+    //         if(IsThat){
+    //             var nextOr ='prev';
+    //         }
+    //         else{ 
+    //             var nextOr ='next';
+    //         }
 
-            for(var i = 0; i < dot.length; i++){
-			    dot[i].setAttribute('data-number', i); //데이터 넘버를 i로 세팅하는 것
+    //         const currentItem = document.querySelector('.cur');
+    //         const currentThumb = document.querySelector('.active');
+    //         currentItem.classList.remove('cur')
+    //         currentThumb.classList.remove('active')
 
-                dot[i].addEventListener('click', function(event){ //도트 i를 클릭하면 그 아이템과 도트에 클래스를 붙이고, 이게 아닌 애들은 클래스를 제거해야함 
-				clearInterval(auto_slide); // 자동 이동 멈춤 
+    //       if (nextOr === 'next'){  // 다음버튼을 눌렀다면
+    //             if (!currentItem.nextElementSibling) {//마지막 아이템일 경우
+    //                 item[0].classList.add('ontheSlide') //처음으로 슬라이드아이템 이동
+    //                 thumbnail[0].classList.add('ontheThumbnail')//처음으로 썸네일 아이템 이동
+    //             }   
+    //             else { //그 외의 경우
+    //                 currentItem.nextElementSibling.classList.add('ontheSlide') //다음으로 슬라이드 아이템 이동
+    //                 currentThumb.nextElementSibling.classList.add('ontheThumbnail')//다음으로 썸네일 아이템 이동
+    //             }   
+    //       }
+    //        else if (nextOr === 'previous') { // 이전 버튼을 눌렀다면
+    //            if (!currentItem.previousElementSibling) { //첫번재 아이템일 경우
+    //                 item[item.length-1].classList.add('ontheSlide') //마지막 슬라이드로 이동
+    //                 thumbnail[thumbnail.length-1].classList.add('ontheThumbnail')  //마지막 썸네일로 이동
+    //             }   
+    //             else { //다른 경우
+    //                 currentItem.previousElementSibling.classList.add('ontheSlide') //이전 슬라이드 아이템으로 이동
+    //                 currentThumb.previousElementSibling.classList.add('ontheThumbnail')//이전 썸네일 아이템으로 이동
+    //             }   
+    //         } 
+            
+    //     }
+        
+    //     const nextButton = document.querySelector('.nextButton');//다음버튼 감지
+    //     const prevButton = document.querySelector('.prevButton');//이전버튼 감지
+    //     nextButton.addEventListener('click',function(){//다음 버튼을 누른다면
+    //       clearInterval(auto_slide)//자동이동을 중지하고
+    //       slider_auto();//수동으로 다음이동
+    //     })
+    //     prevButton.addEventListener('click',function(){//이전 버튼을 누른다면
+    //       clearInterval(auto_slide)//자동이동을 중지하고
+    //       slider_auto();//수동으로 이전 이동
+    //     })  
+    
 
-				let curItem = document.querySelector('.cur');
-				let curDot = document.querySelector('.active');
-				let number = event.target.getAttribute('data-number') // 몇 번째 썸네일을 클릭했는지 감지(안됨???)
+    //     //도트 0번을 누르면 active 클래스 추가, 이미지 0번에 cur를 주고
+    //     //도트 1번을 누르면 active 클래스 추가, 이미지 1번에 cur를 주고 
+    //     //도트 2번을 누르면 active 클래스 추가, 이미지 2번에 cur주기
 
-				curItem.classList.remove('cur') // 현재 아이템 비활성화
-				curDot.classList.remove('active') // 현재 썸네일 비활성화
+    //   for(var i = 0; i < dot.length; i++){
+	// 		    dot[i].setAttribute('data-number', i); //데이터 넘버를 i로 세팅하는 것
 
-				item[number].classList.add('cur') // 썸네일과 같은 숫자의 아이템을 활성화
-				dot[number].classList.add('active') // 클릭한 썸네일을 활성화
-			    }) // 안되는데??????????/
+    //             dot[i].addEventListener('click', function(event){ //도트 i를 클릭하면 그 아이템과 도트에 클래스를 붙이고, 이게 아닌 애들은 클래스를 제거해야함 
+	// 			clearInterval(auto_slide); // 자동 이동 멈춤 
+
+	// 			const curItem = document.querySelector('.cur');
+	// 			const curDot = document.querySelector('.active');
+
+	// 			curItem.classList.remove('cur'); // 현재 아이템 비활성화
+	// 			curDot.classList.remove('active'); // 현재 썸네일 비활성화
+
+	// 			const number = event.target.getAttribute('data-number'); // 몇 번째 썸네일을 클릭했는지 감지(안됨???)
+
+
+	// 			item[number].classList.add('cur') // 썸네일과 같은 숫자의 아이템을 활성화
+	// 			dot[number].classList.add('active') // 클릭한 썸네일을 활성화
+	// 		    }) // 안되는데??????????/
+    //         }
+
+
+    // }
+    // slide01();
+
+
+
+    // 섹션.비쥬얼 슬라이드(자동슬라이드, 페이지내이션 누르면 그 페이지로)
+
+    const $slides = $(".visual .slide");
+    const $pn_btns = $(".visual .pagination button.dots");
+    // const $btn_prev = $(".visual buton.prev");
+    // const $btn_next = $(".visual buton.next");
+    let cnt = 0; // 
+    let si_01 = 0; // interval
+
+    $pn_btns.on("click", function(){
+        var cur_num = $pn_btns.index(this);
+        if(cur_num == cnt) return;
+        cnt = cur_num;
+        fade_img(cnt);
+        pagination_change(cnt);        
+    })
+
+
+    function count_plus(){
+    cnt = cnt == $slides.length - 1 ? 0 : cnt + 1;
+    fade_img(cnt);
+    pagination_change(cnt);
+    //if(cnt == ($slides.length - 1) ) cnt = 0; else{ cnt++; }
+    }
+
+    function count_minus(){
+    cnt = cnt == 0 ? $slides.length - 1 : cnt - 1;
+    fade_img(cnt);
+    pagination_change(cnt);
+    // if(cnt == 0) cnt = ($slides.length - 1);   else{ cnt--; }
+    }
+
+    function fade_img(num){
+        stop_si();
+        $slides.fadeOut(500);
+        $slides.eq(num).fadeIn(500, function(){
+        start_si();
+        });
+    }
+
+    function pagination_change(num){
+        $pn_btns.removeClass("active");
+        $pn_btns.eq(num).addClass("active");
+    }
+
+    function start_si(){ // 스타트인터벌 함수, 인터벌 초기값이 0 이 아니면 인터벌 멈추고 다시 세팅
+        if(si_01 != 0){
+            clearInterval(si_01)
+        }
+        si_01 = setInterval(count_plus, 3000);
+    }
+
+    function stop_si(){ // 스탑인터벌 함수, 스탑 초기값 0 아니면 인터벌 클리어하고 0으로 세팅
+        if(si_01 != 0){
+            clearInterval(si_01)
+        }
+        si_01 = 0;
+    }
+
+  start_si();
+
+
+
+
+    //이동형 슬라이드
+    function rolling_slides(_targetWrap){
+
+      const $wrap = _targetWrap; // .product_01 or .product_02
+   
+      const $mask = $($wrap +" div.view_mask");
+      let $inner_ul = $($wrap +" div.view_mask > ul");
+      let $inner_ul_li = $($wrap +" div.view_mask > ul > li");
+      const $btn_prev = $($wrap +' button.prev');
+      const $btn_next = $($wrap +" button.next");
+   
+      const li_width = $inner_ul_li.outerWidth();
+      const move_cnt = 1; // 보여지는 li 갯수
+      const duration = 400; // 이동속도
+      let click_Event = true;
+      let si_01 = 0; // undefined
+      
+      (function init(){
+         for(var i = 1; i <= move_cnt; i++){
+            $inner_ul_li.last().prependTo($inner_ul);
+         }
+         $inner_ul.css("margin-left", -(li_width * move_cnt) + "px");
+      })();
+   
+      // 즉시 실행 (요기있는 내용을 즉시 실행해라)();
+   
+      
+   
+      function movement(_direction){
+         stop_si()
+         $inner_ul.animate({ left: _direction * li_width * move_cnt +"px" }, duration, function(){
+            for(var i = 1; i <= move_cnt; i++){
+               $inner_ul_li = $($wrap + " div.view_mask > ul > li");
+               if(_direction == 1){
+                  $inner_ul_li.last().prependTo($inner_ul);
+               }
+               else if(_direction == -1){
+                  $inner_ul_li.first().appendTo($inner_ul);
+               }
             }
-	}
-	slide01();
+            $inner_ul.css("left", "0px");
+            click_Event = true;
+            start_si();
+         });
+      }
+   
+      $btn_prev.click(function(){
+         if(click_Event){
+            click_Event = false;
+            movement(1);
+         }
+         else{
+            return
+         }
+      });
+   
+      $btn_next.click(function(){
+         if(click_Event){
+            click_Event = false;
+            movement(-1);
+         }
+         else{
+            return
+         }
+      });
+   
+      function start_si(){
+         if(si_01 != 0){
+            clearInterval(si_01);
+         } 
+         si_01 = setInterval(function(){$btn_next.click()}, 4000);
+      }
+      
+      function stop_si(){
+         if(si_01 != 0) clearInterval(si_01);
+         si_01 = 0;
+      }
+   
+      start_si();
+   
+   }
+   
+   let rolling_01 = rolling_slides(".dramas");
+   let rolling_02 = rolling_slides(".trailers");
 
 
 
+
+
+
+   //original slider
     $(function(){ 
         var slides = $('.inner_wrap_half .info_wrap'),
             slideCount = slides.length,
@@ -81,6 +277,8 @@ $(document).ready(function(){
         var dots = $('.pagination_01 .dot_01'),
             dotCount = dots.length,
             currentDot = 0;
+
+        let cnt = 0; 
         
         //해당 시간이 지나면 한 번만 할 일
         //var timer = setTimeout(할일, 1000); 
@@ -131,25 +329,39 @@ $(document).ready(function(){
 
 
         //도트 클릭하면 그 도트, 이미지, 슬라이드 들어오게 하기
-        dots.click(function(e){
-            clearInt();
 
-            slides.currentIndex.hide();
-            imgs.currentImg.hide();
-            dots.currentDot.removeClass('active');// 지금있는 내용 전부 사라지게 만들기
+        dots.on("click", function(){
+          var curNum = dots.index(this);
+          if(curNum == cnt) return;
+          cnt = curNum;
+          fade_imgs(cnt);
+          fade_slides(cnt);
+          page_change(cnt);        
+      })
 
-            imgs.eq(currentImg).fadeIn(500, function(e){ // 그 담에 이미지 
-                setInt();
-            });
-            slides.eq(currentIndex).fadeIn(500, function(e){
-                setInt();
-            });
-            dots.eq(currentIndex).addClass('active', function(e){
-                setInt();
-            })            
-        })
+
+        function fade_imgs(num){
+          clearInt();
+          imgs.fadeOut(500);
+          imgs.eq(num).fadeIn(500, function(){
+          // setInt();
+          });
+      }
+
+        function fade_slides(num){
+          clearInt();
+          slides.fadeOut(500);
+          slides.eq(num).fadeIn(500, function(){
+          // setInt();
+          })
+        }
+  
+        function page_change(num){
+          dots.removeClass("active");
+          dots.eq(num).addClass("active");
+        }
+  
         
-
         //마우스를 대면 멈추게 조정
 
         $(dots).mouseover(function(){
@@ -196,14 +408,14 @@ else {
     // Tablet
     if(screen.width >= 768){
 
-        
+      let rolling_03 = rolling_slides(".event");
 
     }
 
     // Mobile
     else {
 
-        
+      let rolling_03 = rolling_slides(".event");
 
 
     }
