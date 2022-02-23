@@ -28,7 +28,7 @@
 	section.visual div.info_02 p.interviewee { font-size: 2em; color: #333; font-weight: bold; margin-bottom: 30px; }
 	section.visual div.info_02 p.content { color: #333; } 
 	
-	section.visual div.pagination { position: absolute; left: 0; bottom: 0; z-index: 20; width: 100%; margin-bottom: 10px; text-align: center; }
+	section.visual div.pagination { position: absolute; left: 0; bottom: 0; z-index: 20; width: 100%; margin-bottom: 20px; text-align: center; }
 	section.visual div.pagination > button { display: inline-block; padding: 0 0.5625em; }
 	section.visual div.pagination > button > span { display: inline-block; width: 11px; height: 11px; border-radius: 50%; background: #fff; }
 	section.visual div.pagination > button.active > span { background: #085a8c; }
