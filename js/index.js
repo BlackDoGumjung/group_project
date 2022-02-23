@@ -110,37 +110,86 @@ $(document).ready(function(){
 
 
 
-    // 섹션.비쥬얼 슬라이드(자동슬라이드, 페이지내이션 누르면 그 페이지로)
+    // 섹션.비쥬얼 섹션.오리지날 슬라이드(자동슬라이드, 페이지내이션 누르면 그 페이지로)
 
     const $slides = $(".visual .slide");
     const $pn_btns = $(".visual .pagination button.dots");
+    
+    const slides = $(".info_container .info_wrap");
+    const imgs = $(".imgs_wrap .img_wrap");
+    const pn_btns = $(".original .pagination button.dots");
+
     // const $btn_prev = $(".visual buton.prev");
     // const $btn_next = $(".visual buton.next");
-    let cnt = 0; // 
+
+    let cnt = 0; // 기본값 0에서 시작하라고...
+    let cnt_01 = 0;
     let si_01 = 0; // interval
+    let si_02 = 0;
 
     $pn_btns.on("click", function(){
-        var cur_num = $pn_btns.index(this);
+        const cur_num = $pn_btns.index(this);
         if(cur_num == cnt) return;
         cnt = cur_num;
         fade_img(cnt);
-        pagination_change(cnt);        
+        pagination_change(cnt);    
     })
 
+    pn_btns.on("click", function(){
+        const cur_num = pn_btns.index(this);
+        if(cur_num == cnt_01) return;
+        cnt_01 = cur_num;
+        fade_slide(cnt_01);
+        fade_imgs(cnt_01);
+        page_change(cnt_01);   
+    })
+      
 
     function count_plus(){
-    cnt = cnt == $slides.length - 1 ? 0 : cnt + 1;
-    fade_img(cnt);
-    pagination_change(cnt);
+        cnt = cnt == $slides.length - 1 ? 0 : cnt + 1;
+        fade_img(cnt);
+        pagination_change(cnt);
     //if(cnt == ($slides.length - 1) ) cnt = 0; else{ cnt++; }
     }
+        
+    
+    function count_p(){
+        cnt_01 = cnt_01 == slides.length - 1 ? 0 : cnt_01 + 1;
+        fade_slide(cnt_01);
+        fade_imgs(cnt_01); 
+        page_change(cnt_01);  
+    }
 
+    function count_pl(){
+        cnt_01 = cnt_01 == imgs.length -1 ? 0 : cnt_01 + 1;
+        fade_slide(cnt_01);
+        fade_imgs(cnt_01); 
+        page_change(cnt_01);  
+    }
+
+        
     function count_minus(){
-    cnt = cnt == 0 ? $slides.length - 1 : cnt - 1;
-    fade_img(cnt);
-    pagination_change(cnt);
+        cnt = cnt == 0 ? $slides.length - 1 : cnt - 1;
+        fade_img(cnt);
+        pagination_change(cnt);
+        
     // if(cnt == 0) cnt = ($slides.length - 1);   else{ cnt--; }
     }
+    
+    function count_m(){
+        cnt = cnt == 0? slides.length -1 : cnt_01 -1;
+        fade_slide(cnt_01);
+        fade_imgs(cnt_01);
+        page_change(cnt_01);  
+    }
+
+    function count_ml(){
+        cnt = cnt == 0? imgs.length -1 : cnt_01 -1;
+        fade_slide(cnt_01);
+        fade_imgs(cnt_01);
+        page_change(cnt_01); 
+    }
+
 
     function fade_img(num){
         stop_si();
@@ -155,11 +204,46 @@ $(document).ready(function(){
         $pn_btns.eq(num).addClass("active");
     }
 
+    function fade_slide(num){
+        stop_s();
+        slides.fadeOut(500);
+        slides.eq(num).fadeIn(500, function(){
+        start_s();
+        });
+    }
+
+    function fade_imgs(num){
+        stop_s();
+        imgs.fadeOut(500);
+        imgs.eq(num).fadeIn(500, function(){
+        start_s();
+        });
+    }
+
+    function page_change(num){
+        pn_btns.removeClass("active");
+        pn_btns.eq(num).addClass("active");
+    }
+
     function start_si(){ // 스타트인터벌 함수, 인터벌 초기값이 0 이 아니면 인터벌 멈추고 다시 세팅
         if(si_01 != 0){
             clearInterval(si_01)
         }
         si_01 = setInterval(count_plus, 3000);
+    }
+
+    function start_s(){
+        if(si_02 !=0){
+            clearInterval(si_02)
+        }
+        si_02 = setInterval(count_p, 3000);
+    }
+
+    function start_ss(){
+        if(si_02 !=0){
+            clearInterval(si_02)
+        }
+        si_02 = setInterval(count_pl, 3000);
     }
 
     function stop_si(){ // 스탑인터벌 함수, 스탑 초기값 0 아니면 인터벌 클리어하고 0으로 세팅
@@ -169,7 +253,23 @@ $(document).ready(function(){
         si_01 = 0;
     }
 
+    function stop_s(){
+        if(si_02 !=0){
+            clearInterval(si_02)
+        }
+        si_02 = 0;
+    }
+
+    function stop_ss(){
+        if(si_02 !=0){
+            clearInterval(si_02)
+        }
+        si_02 = 0;
+    }
+
   start_si();
+  start_s();
+  start_ss();
 
 
 
@@ -264,129 +364,136 @@ $(document).ready(function(){
 
 
 
-   //original slider
-    $(function(){ 
-        var slides = $('.inner_wrap_half .info_wrap'),
-            slideCount = slides.length,
-            currentIndex = 0;
+//    //original slider
+//     $(function(){ 
+//         var slides = $('.info_container .info_wrap'),
+//             slideCount = slides.length,
+//             currentIndex = 0;
 
-        var imgs = $('.imgs_wrap .img_wrap'),
-            imgCount = imgs.length,
-            currentImg = 0;
+//         var imgs = $('.imgs_wrap .img_wrap'),
+//             imgCount = imgs.length,
+//             currentImg = 0;
 
-        var dots = $('.pagination_01 .dot_01'),
-            dotCount = dots.length,
-            currentDot = 0;
+//         var dots = $('.pagination .dots'),
+//             dotCount = dots.length,
+//             currentDot = 0;
 
-        let cnt = 0; 
+//         let cnt = 0; 
         
-        //해당 시간이 지나면 한 번만 할 일
-        //var timer = setTimeout(할일, 1000); 
-        //clearTimeout(대상의 이름);
+//         //해당 시간이 지나면 한 번만 할 일
+//         //var timer = setTimeout(할일, 1000); 
+//         //clearTimeout(대상의 이름);
 
-        //일정시간마다 할일
-        //var timer = setInterval(할일, 시간);
-        //clearInterval(timer);
+//         //일정시간마다 할일
+//         //var timer = setInterval(할일, 시간);
+//         //clearInterval(timer);
         
-        //제이쿼리 집합개체(object) 중 특정번째 요소 선택 .eq
-        //.eq(숫자)<-해당하는 요소를 선택 equivalent 동등한, 인덱스 번호와 동등한 요소
-        //요소를 서서히 나타나도록 .fadeIn()
-
-        slides.eq(currentIndex).fadeIn();
-        imgs.eq(currentImg).fadeIn();
-        dots.eq(currentDot).addClass('active');
+//         //제이쿼리 집합개체(object) 중 특정번째 요소 선택 .eq
+//         //.eq(숫자)<-해당하는 요소를 선택 equivalent 동등한, 인덱스 번호와 동등한 요소
+//         //요소를 서서히 나타나도록 .fadeIn()
 
 
-        var timer = setInterval(showNextSlides, 4000);
-        var timer01 = setInterval(displayNextImgs, 4000);
-        var timer02 = setInterval(activeDots, 4000);
-        //clearInterval(timer);
-
-        function activeDots(){ 
-            var nextDot = (currentDot +1) % dotCount;
-            dots.eq(currentDot).removeClass('active');
-            dots.eq(nextDot).addClass('active');
-            currentDot = nextDot;
-
-        }
-        function showNextSlides(){
-                //ci가 0 번일 때, 1이 들어와야함, ci 1 ni 2, ci 2 ni 3, ci 3 ni 0
-                //slideCount 4
-                var nextIndex = (currentIndex +1) % slideCount; //슬라이드 길이로 나눠주면 다시 0번으로 갈 수 있음
-                //1. 현재 슬라이드가 사라지고 
-                slides.eq(currentIndex).fadeOut();
-                //2. 다음 슬라이드가 나타난다.
-                slides.eq(nextIndex).fadeIn();
-                currentIndex = nextIndex;
-        } 
-
-        function displayNextImgs(){
-            var nextImg = (currentImg +1) % imgCount;
-            imgs.eq(currentImg).fadeOut();
-            imgs.eq(nextImg).fadeIn();
-            currentImg = nextImg;
-        }
+//         // function initSlide(){
+//             slides.eq(currentIndex).fadeIn();
+//             imgs.eq(currentImg).fadeIn();
+//             dots.eq(currentDot).addClass('active');
+//         // }
+//         // initSlide();
+        
 
 
-        //도트 클릭하면 그 도트, 이미지, 슬라이드 들어오게 하기
+//         var timer = setInterval(showNextSlides, 4000);
+//         var timer01 = setInterval(displayNextImgs, 4000);
+//         var timer02 = setInterval(activeDots, 4000);
+//         //clearInterval(timer);
 
-        dots.on("click", function(){
-          var curNum = dots.index(this);
-          if(curNum == cnt) return;
-          cnt = curNum;
-          fade_imgs(cnt);
-          fade_slides(cnt);
-          page_change(cnt);        
-      })
+//         function activeDots(){ 
+//             var nextDot = (currentDot +1) % dotCount;
+//             dots.eq(currentDot).removeClass('active');
+//             dots.eq(nextDot).addClass('active');
+//             currentDot = nextDot;
+//         }
+
+//         function showNextSlides(){
+//                 //ci가 0 번일 때, 1이 들어와야함, ci 1 ni 2, ci 2 ni 3, ci 3 ni 0
+//                 //slideCount 4
+//                 var nextIndex = (currentIndex +1) % slideCount; //슬라이드 길이로 나눠주면 다시 0번으로 갈 수 있음
+//                 //1. 현재 슬라이드가 사라지고 
+//                 slides.eq(currentIndex).fadeOut();
+//                 //2. 다음 슬라이드가 나타난다.
+//                 slides.eq(nextIndex).fadeIn();
+//                 currentIndex = nextIndex;
+//         } 
+
+//         function displayNextImgs(){
+//             var nextImg = (currentImg +1) % imgCount;
+//             imgs.eq(currentImg).fadeOut();
+//             imgs.eq(nextImg).fadeIn();
+//             currentImg = nextImg;
+//         }
 
 
-        function fade_imgs(num){
-          clearInt();
-          imgs.fadeOut(500);
-          imgs.eq(num).fadeIn(500, function(){
-          // setInt();
-          });
-      }
+//         //도트 클릭하면 그 도트, 이미지, 슬라이드 들어오게 하기
 
-        function fade_slides(num){
-          clearInt();
-          slides.fadeOut(500);
-          slides.eq(num).fadeIn(500, function(){
-          // setInt();
-          })
-        }
+//         dots.on("click", function(){
+//           var curNum = dots.index(this);
+//           if(curNum == cnt) return;
+//           cnt = curNum;
+//           fade_imgs(cnt);
+//           fade_slides(cnt);
+//           page_change(cnt);        
+//         });
+
+
+//         function fade_imgs(num){
+//           clearInt();
+//           imgs.fadeOut(500);
+//           imgs.eq(num).fadeIn(500, function(){
+//           // setInt();
+//           });
+//       }
+
+//         function fade_slides(num){
+//           clearInt();
+//           slides.fadeOut(500);
+//           slides.eq(num).fadeIn(500, function(){
+//           // setInt();
+//           })
+//         }
   
-        function page_change(num){
-          dots.removeClass("active");
-          dots.eq(num).addClass("active");
-        }
+//         function page_change(num){
+//           dots.removeClass("active");
+//           dots.eq(num).addClass("active");
+//         }
   
         
         //마우스를 대면 멈추게 조정
 
-        $(dots).mouseover(function(){
-            clearInt();
-        })
+        // dots.mouseover(function(){
+        //     clearInt();
+        // })
 
-        function clearInt(){
-            clearInterval(timer);
-            clearInterval(timer01);
-            clearInterval(timer02);
-        }
+        // function clearInt(){
+        //     clearInterval(timer);
+        //     clearInterval(timer01);
+        //     clearInterval(timer02);
+        // }
 
-        $(dots).mouseout(function(){
-            setInt();
+        // function setInt(){
+        //           timer = setInterval(showNextSlides, 4000);
+        //           timer01 = setInterval(displayNextImgs, 4000);
+        //           timer02 = setInterval(activeDots, 4000);
+        //       }
+        
+        
+        // dots.mouseout(function(){
+        //     setInt();
             
-        }) 
+    //     }) 
 
-        function setInt(){
-            timer = setInterval(showNextSlides, 4000);
-            timer01 = setInterval(displayNextImgs, 4000);
-            timer02 = setInterval(activeDots, 4000);
-        }
-        
-        
-    })
+      
+             
+    // });
 
 
 
