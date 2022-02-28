@@ -70,14 +70,6 @@ a.btn_more { padding: 0.5rem 2.5rem; border: 1px solid black; font-size: 1em; }
 
 
 
-/* pagination
-.pagination { position: absolute; left: 0; bottom: 0; z-index: 20; width: 100%; text-align: center; }
-.pagination > button { display: inline-block; padding: 0.625em 0.938em; }
-.pagination > button > span { display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: #fff; } */
-
-
-
-
 /* ===========mobile(start)============== */
 @media screen and (max-width: 767px) {
 
