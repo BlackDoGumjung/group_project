@@ -18,23 +18,18 @@ $(document).ready(function(){
 	  //qanda 토글
 
       let qanda = document.querySelectorAll(".acc button");
-
       function toggle_Title() {
           let expanededContents = this.getAttribute('area-expanded'); // html안의 area-expanded 요소를 가져옴
-      
           for (i = 0; i < qanda.length; i++) { //전체 큐앤에이 갯수로 돌림
           qanda[i].setAttribute('area-expanded', 'false'); //얘네를 area-expanded를 false로 설정
           }
-      
           if (expanededContents == 'false') { //만약에 이 조건이 맞으면 트루로 바꿔줌
           this.setAttribute('area-expanded', 'true');
           }
       }
+      qanda.forEach(item => item.addEventListener('click', toggle_Title)); 
+      // forEach함수(파라미터 안의 값을 배열로 정렬), 클릭하면 토글 타이틀 함수가 실행되게 하기(아이템은 지금 가져온 그 아이템, 클릭한 그 아이템)
 
-      qanda.forEach(item => item.addEventListener('click', toggle_Title)); // forEach함수(파라미터 안의 값을 배열로 정렬), 클릭하면 토글 타이틀 함수가 실행되게 하기(아이템은 지금 가져온 그 아이템, 클릭한 그 아이템)
-
-
-   
 
       if(!isMobile){
 		

@@ -24,7 +24,7 @@ $(document).ready(function(){
     const imgs = $(".imgs_wrap .img_wrap");
     const pn_btns = $(".original .pagination button.dots");
 
-    let cnt = 0; // 기본값 0에서 시작하라고...
+    let cnt = 0;
     let cnt_01 = 0;
     let si_01 = 0; // interval
     let si_02 = 0;
@@ -174,90 +174,190 @@ $(document).ready(function(){
 
 
     //이동형 슬라이드
-    function rolling_slides(_targetWrap){
+    function rolling_slide(_targetWrap, _view_ea_D, _view_ea_T, _view_ea_M, _add_opacity){
+		console.log("done");
+		var $wrap = _targetWrap;
+		var $inner = $($wrap +" div.view_mask");
+		var $inner_ul = $($wrap +" div.view_mask > ul");
+		var $inner_ul_li = $($wrap +" div.view_mask > ul > li");
+		var $btn_prev = $($wrap +" button.prev");
+		var $btn_next = $($wrap +" button.next");
+		var $pn_btns = $($wrap +" .pagination > button.pages");
+		var view_ea = (function(){
+			var result;
+			if(!isMobile) result = _view_ea_D;
+			else {
+				if(screen.width >= 768) result = _view_ea_T;
+				else if(screen.width < 768) result = _view_ea_M;
+			}
+			return result;
+		})();
+		var li_width = $inner.outerWidth() / view_ea;
+		var move_cnt = 1; //prev, next �뚮┫ �� 紐� 媛쒖뵫 ��吏곸씠�붿�
+		var duration = 200; // �뚯븘媛��� �띾룄, 媛� 而ㅼ쭏�섎줉 �먮━寃� �뚯븘媛�
+		var click_Event = true;
+		var si_switch = 0;
+		var cnt = 0;
+		var add_opa = _add_opacity;
+		var _li_sort = [];
 
-      const $wrap = _targetWrap; 
-   
-      const $mask = $($wrap +" div.view_mask");
-      let $inner_ul = $($wrap +" div.view_mask > ul");
-      let $inner_ul_li = $($wrap +" div.view_mask > ul > li");
-      const $btn_prev = $($wrap +' button.prev');
-      const $btn_next = $($wrap +" button.next");
-   
-      const li_width = $inner_ul_li.outerWidth();
-      const move_cnt = 1; // 보여지는 li 갯수
-      const duration = 400; // 이동속도
-      let click_Event = true;
-      let si_01 = 0; // undefined
-      
-      (function init(){
-         for(var i = 1; i <= move_cnt; i++){
-            $inner_ul_li.last().prependTo($inner_ul);
-         }
-         $inner_ul.css("margin-left", -(li_width * move_cnt) + "px");
-      })();
-   
-      // 즉시 실행 (요기있는 내용을 즉시 실행해라)();
-   
-      
-   
-      function movement(_direction){
-         stop_si()
-         $inner_ul.animate({ left: _direction * li_width * move_cnt +"px" }, duration, function(){
-            for(var i = 1; i <= move_cnt; i++){
-               $inner_ul_li = $($wrap + " div.view_mask > ul > li");
-               if(_direction == 1){
-                  $inner_ul_li.last().prependTo($inner_ul);
-               }
-               else if(_direction == -1){
-                  $inner_ul_li.first().appendTo($inner_ul);
-               }
-            }
-            $inner_ul.css("left", "0px");
-            click_Event = true;
-            start_si();
-         });
-      }
-   
-      $btn_prev.click(function(){
-         if(click_Event){
-            click_Event = false;
-            movement(1);
-         }
-         else{
-            return
-         }
-      });
-   
-      $btn_next.click(function(){
-         if(click_Event){
-            click_Event = false;
-            movement(-1);
-         }
-         else{
-            return
-         }
-      });
+		(function init(){
+			for(var i = 1; i <= move_cnt; i++){
+				$inner_ul_li.last().prependTo($inner_ul);
+			}
+			$inner_ul_li.css("width", li_width +"px");
+			if(add_opa){
+				$inner_ul_li.css("opacity", "0.5");
+				$inner_ul_li.eq(0).css("opacity", "1");
+			}
+			$inner_ul.css("width", li_width * $inner_ul_li.length +"px").css("margin-left", -li_width * move_cnt +"px").css("position", "relative");
+			pagination_change(cnt);
+		})();
 
-   
-      function start_si(){
-         if(si_01 != 0){
-            clearInterval(si_01);
-         } 
-         si_01 = setInterval(function(){$btn_next.click()}, 4000);
-      }
-      
-      function stop_si(){
-         if(si_01 != 0) clearInterval(si_01);
-         si_01 = 0;
-      }
-   
-      start_si();
-   
-   }
-   
-   let rolling_01 = rolling_slides(".dramas");
-   let rolling_02 = rolling_slides(".trailers");
+		$btn_prev.on("click", function(){
+			move_ul("prev");
+		});
+		$btn_next.on("click", function(){
+			console.log($wrap);
+			move_ul("next");
+		});
+
+		$pn_btns.on("click", function(e){
+			e.preventDefault();
+			stop_si();
+			var cur_num = $(this).index();
+			console.log(cur_num);
+			var _length = $($wrap +" div.view_mask > ul > li").length;
+			for(var i = 0; i <= $($wrap +" div.view_mask > ul > li").length - 1; i++){
+				
+				_li_sort[i] = $("li[data-index='"+ cur_num +"']");
+				cur_num = cur_num == _length - 1 ? 0 : cur_num + 1;
+			}
+			console.log(_li_sort);
+			$($wrap +" div.view_mask > ul").empty();
+			for(var i = 0; i <= _length - 1; i++){
+				_li_sort[i].appendTo($wrap +" div.view_mask > ul");
+			}
+			$($wrap +" div.view_mask > ul > li").last().prependTo($wrap +" div.view_mask > ul");
+			cnt = Number(cur_num);
+			pagination_change(cnt);
+			start_si();
+		});
+
+		function pagination_change(num){
+			$pn_btns.removeClass("active");
+			for(var i = 1; i <= view_ea; i++){
+				$pn_btns.eq($($wrap +" div.view_mask > ul > li").eq(i).attr("data-index")).addClass("active");
+			}
+			
+		}
+
+		var pos_X1 = 0;
+		var pos_X2 = 0
+		var pos_Initial;
+		var pos_Final;
+		var threshold = $inner.outerWidth() / 3;
+
+		$inner_ul.on('touchstart', function(){ dragStart(); });
+		$inner_ul.on('touchend', function(){ dragEnd(); });
+		$inner_ul.on('touchmove', function(){ dragAction(); });
+
+		function dragStart (e) {
+			e = e || window.event;
+			e.preventDefault();
+			stop_si();
+			pos_Initial = parseInt($inner_ul.css("left"));
+
+			if (e.type == 'touchstart') {
+				pos_X1 = e.touches[0].clientX;
+			} else {
+				pos_X1 = e.clientX;
+				$inner_ul.onmouseup = dragEnd;
+				$inner_ul.onmousemove = dragAction;
+			}
+			console.log("start");
+		}
+
+		function dragAction (e) {
+			e = e || window.event;
+			e.preventDefault();
+			if (e.type == 'touchmove') {
+				pos_X2 = pos_X1 - e.touches[0].clientX;
+				pos_X1 = e.touches[0].clientX;
+			} else {
+				pos_X2 = pos_X1 - e.clientX;
+				pos_X1 = e.clientX;
+			}
+			$inner_ul.css("left", (parseInt($inner_ul.css("left")) - pos_X2) + "px");
+			console.log(parseInt($inner_ul.css("left")) - pos_X2);
+		}
+
+		function dragEnd (e) {
+			e = e || window.event;
+			e.preventDefault();
+			pos_Final = parseInt($inner_ul.css("left"));
+			if (pos_Final - pos_Initial < -threshold) {
+				console.log("swipe(right)");
+				move_ul("next");
+			} else if (pos_Final - pos_Initial > threshold) {
+				console.log("swipe(left)");
+				move_ul("prev");
+			} else {
+				$inner_ul.animate({ left: (pos_Initial) + "px" }, 200, function(){
+					start_si();
+				});
+			}
+			$inner_ul.onmouseup = null;
+			$inner_ul.onmousemove = null;
+			console.log("end");
+		}
+
+		function move_ul(_direction){
+			var _dir = _direction == "prev" ? 1 : -1;
+			if(click_Event){
+				stop_si();
+				click_Event = false;
+				$inner_ul.animate({ left: (li_width * _dir) * move_cnt +"px" }, duration, function(){
+					for(var i = 1; i <= move_cnt; i++){
+						if(_direction == "prev"){
+							$($wrap +" div.view_mask > ul > li").last().prependTo($wrap +" div.view_mask > ul");
+							cnt = cnt == 0 ? $pn_btns.length - 1 : cnt - 1;
+							pagination_change(cnt);
+						}
+						else if(_direction == "next"){
+							$($wrap +" div.view_mask > ul > li").first().appendTo($wrap +" div.view_mask > ul");
+							cnt = cnt == $pn_btns.length - 1 ? 0 : cnt + 1;
+							pagination_change(cnt);
+						}
+					}
+					$inner_ul.css("left", "0px"); // left瑜� 0�명똿
+					if(add_opa){
+						$($wrap +" div.view_mask > ul > li").css("opacity", "0.5");
+						$($wrap +" div.view_mask > ul > li:eq(1)").css("opacity", "1");
+					}
+					click_Event = true;
+					start_si();
+				});
+			}
+			else { return false; }
+		}
+
+		function start_si(){
+			if(si_switch != 0){
+				clearInterval(si_switch);
+			}
+			si_switch = setInterval(function(){ move_ul("next"); }, 5000);
+		}
+		function stop_si(){
+			if(si_switch != 0){
+				clearInterval(si_switch);
+			}
+			si_switch = 0;
+		}
+		start_si();
+
+	}
+
 
 
 
@@ -274,21 +374,20 @@ else {
 
     // Tablet
     if(screen.width >= 768){
-
-      let rolling_03 = rolling_slides(".event");
-
+        let rolling_03 = rolling_slide(".event", 0, 3, 1, false);
     }
 
     // Mobile
     else {
 
-    
-      let rolling_03 = rolling_slides(".event");
-
+        let rolling_03 = rolling_slide(".event", 0, 3, 1, false);
+  
 
     }
     
 }
 
+let rolling_01 = rolling_slide(".dramas", 4, 3, 1, false);
+let rolling_02 = rolling_slide(".trailers", 3, 2, 1, false);
 
 });
